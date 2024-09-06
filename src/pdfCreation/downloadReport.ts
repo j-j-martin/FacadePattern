@@ -1,4 +1,4 @@
-import { REPORT_FILE_SUFFIX as REPORT_FILE_SUFFIX } from './pdfConstants';
+import { REPORT_FILE_SUFFIX } from './pdfConstants';
 
 /**
  * Downloads a poll report

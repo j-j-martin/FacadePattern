@@ -3,7 +3,7 @@ import { QuestionWithAnswers, Answer } from '../types';
 import PDFFont from 'pdf-lib/cjs/api/PDFFont';
 import PDFPage from 'pdf-lib/cjs/api/PDFPage';
 
-import { Chart } from 'chart.js';
+import { Chart } from 'chart.js/auto';
 import {
   CHART_HEIGHT,
   CHART_STANDARD_FONT,
@@ -28,8 +28,6 @@ import {
   X_POSITION_CHART_EXTRAS,
 } from './pdfConstants';
 import replaceNonAnsiCharacters from './replaceNonAnsiCharacters';
-
-// Umfragebewertungen - Frage, Bewertungszahlen, Kommentare
 
 export default class PollReportCreator {
   private pdfDoc: PDFDocument;
@@ -72,8 +70,6 @@ export default class PollReportCreator {
     return await this.pdfDoc.save();
   };
 
-  //#region PollResultPage
-
   private drawPollResultPage = (questionWithAnswers: QuestionWithAnswers) => {
     this.currentPage = this.pdfDoc.addPage(PAGE_SIZE);
     this.textHeight = INITIAL_TEXT_HEIGHT;
@@ -85,8 +81,8 @@ export default class PollReportCreator {
     // this.drawLine();
     this.textHeight -= CHART_HEIGHT + STANDARD_LINE_HEIGHT;
 
-    // Hier müssen die Page und die Höhe mitgegeben werden, da das Einbinden asynchron und so
-    // evt. später passiert. Dadurch könnte textHeight bzw. currentPage bereits einen anderen Wert haben.
+    // The page and the height must be added as arguments here, as the integration is asynchronous and as such
+    // may happen later. As a result, textHeight or currentPage could already have a different value.
     this.drawPollRatingChart(this.currentPage, questionWithAnswers, this.textHeight);
     this.drawPollRatingChartExtras(
       this.currentPage,
@@ -97,14 +93,12 @@ export default class PollReportCreator {
     this.drawAnswerTitles();
     this.textHeight -= STANDARD_LINE_HEIGHT * 2;
 
-    //! Super unsaubere Lösung, kompetenz.id sollte immer definiert sein.
-    //TODO: Herausfinden, an welche Stelle kompetenz.id als undefined benötigt wird.
     this.drawAnswers(questionWithAnswers.Answers);
   };
 
-  private drawPageTitle = (kompetenzName: string) => {
+  private drawPageTitle = (question: string) => {
     if (this.currentPage) {
-      this.currentPage.drawText('Kompetenz: ' + replaceNonAnsiCharacters(kompetenzName), {
+      this.currentPage.drawText(replaceNonAnsiCharacters(question), {
         x: PADDING,
         y: this.textHeight,
         size: FONT_SIZE_TITLE,
@@ -128,25 +122,6 @@ export default class PollReportCreator {
       });
     }
   };
-
-  // private drawKompetenzText = (kompetenzBeschreibung: string) => {
-  //   replaceNonAnsiCharacters(kompetenzBeschreibung)
-  //     .split('\n')
-  //     .forEach((b) => {
-  //       const lines = this.getLinesFromText(b);
-  //       if (this.currentPage) {
-  //         this.currentPage.drawText(lines.join('\n'), {
-  //           x: PADDING,
-  //           y: this.textHeight,
-  //           size: FONT_SIZE_TEXT,
-  //           font: this.font,
-  //           lineHeight: STANDARD_LINE_HEIGHT,
-  //         });
-  //         this.textHeight -= this.numberOfLines * STANDARD_LINE_HEIGHT;
-  //         this.numberOfLines = 0;
-  //       }
-  //     });
-  // };
 
   private getLinesFromText = (text: string) => {
     const lines: string[] = [];
@@ -175,13 +150,14 @@ export default class PollReportCreator {
       canvas.style.display = 'none';
 
       document.body.append(canvas);
+      console.log(questionWithAnswers.Answers.map((a) => a.rating));
       const chart = new Chart(canvas, {
         type: 'bar',
         data: {
           xLabels: ['1', '2', '3', '4', '5', '6', '7'],
           datasets: [
             {
-              borderRadius: 25,
+              // borderRadius: 25,
               data: this.getBarData(questionWithAnswers.Answers.map((a) => a.rating)),
               backgroundColor: this.chartColor,
             },
@@ -193,11 +169,6 @@ export default class PollReportCreator {
           plugins: {
             legend: {
               display: false,
-            },
-            title: {
-              display: true,
-              text: questionWithAnswers.Question,
-              font: CHART_STANDARD_FONT,
             },
           },
           scales: {
@@ -247,14 +218,13 @@ export default class PollReportCreator {
 
   private drawPollRatingChartExtras = (page: PDFPage, ratings: number[], yBaseCoord: number) => {
     if (this.currentPage) {
-      //const currentBewertungen: number[] = this.kompetenzBewertungen.filter((kb) => kb.kompetenzId === kompetenz.id).map((kb) => kb.bewertung);
       const numberOfRatings: number = ratings.filter((b) => b !== 0).length;
       const noAnswerCount: number = ratings.length - numberOfRatings;
       const averageValueOfRatings: number = Math.round((ratings.reduce((sum, val) => sum + val, 0) / numberOfRatings) * 10) / 10;
 
       let yCoord: number = yBaseCoord + CHART_HEIGHT - STANDARD_LINE_HEIGHT;
 
-      page.drawText('Anzahl', {
+      page.drawText('Number of', {
         x: X_POSITION_CHART_EXTRAS,
         y: yCoord,
         font: this.fontBold,
@@ -262,7 +232,7 @@ export default class PollReportCreator {
       });
       yCoord -= LINE_HEIGHT_SUBTITLE;
 
-      page.drawText('Bewertungen', {
+      page.drawText('Ratings', {
         x: X_POSITION_CHART_EXTRAS,
         y: yCoord,
         font: this.fontBold,
@@ -278,7 +248,7 @@ export default class PollReportCreator {
       });
       yCoord = yBaseCoord + (CHART_HEIGHT * 2) / 3 - STANDARD_LINE_HEIGHT - 5;
 
-      page.drawText('Anzahl', {
+      page.drawText('No Answer', {
         x: X_POSITION_CHART_EXTRAS,
         y: yCoord,
         font: this.fontBold,
@@ -286,7 +256,7 @@ export default class PollReportCreator {
       });
       yCoord -= LINE_HEIGHT_SUBTITLE;
 
-      page.drawText('Keine Angabe', {
+      page.drawText('Count', {
         x: X_POSITION_CHART_EXTRAS,
         y: yCoord,
         font: this.fontBold,

@@ -1,50 +1,15 @@
-# React + TypeScript + Vite
+# Workshop: Facade and Adapter Patterns
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+In this workshop, we will solve several tasks related to the **Facade** and **Adapter** design patterns.
 
-Currently, two official plugins are available:
+## Links:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+1. [Poll Result Mock Task](https://codesandbox.io/p/sandbox/poll-result-mock-task-pvf6sd)
+2. [Poll Result Mock Solution](https://codesandbox.io/p/sandbox/poll-result-mock-solution-25xx7z)
+3. [Facade Pattern 1 Task](https://codesandbox.io/p/sandbox/facade-pattern-1-task-h2sk4y)
+4. [Facade Pattern 1 Solution - Class Based](https://codesandbox.io/p/sandbox/facade-pattern-1-solution-class-based-t6d3gl)
+5. [Facade Pattern 1 Solution - Function Based](https://codesandbox.io/p/sandbox/facade-pattern-1-solution-class-based-t6d3gl)
+6. [Facade Pattern 2 Task](https://codesandbox.io/p/sandbox/facade-pattern-2-task-v25p87)
+7. [Facade Pattern 2 Solution](https://codesandbox.io/p/sandbox/facade-pattern-2-solution-hk6tyx)
+8. [Adapter Pattern Task](https://codesandbox.io/p/sandbox/adapter-pattern-task-jmmt5g)
+9. [Adapter Pattern Solution](https://codesandbox.io/p/sandbox/adapter-pattern-solution-zc6hrz)

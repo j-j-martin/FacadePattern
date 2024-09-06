@@ -34,7 +34,7 @@ export const CHART_STANDARD_FONT = {
 };
 
 export const CHART_TICK_FONT = {
-  size: 60,
+  size: 30,
   family: 'Helvetica',
   normalWeight: normalWeight,
 };
